@@ -88,8 +88,9 @@ jobs:
             fi
 
             if [ "${PENDING}" -eq 0 ] && [ "${FAILED}" -gt 0 ]; then
-              echo "Some checks failed, posting informational comment and continuing to poll for re-runs..."
-              gh issue comment ${ISSUE_NUMBER} --repo "${{ github.repository }}" --body ":warning: Some CI checks have failed on [Platform PR #${PR_NUMBER}](https://github.com/quarkusio/quarkus-platform/pull/${PR_NUMBER}). Continuing to monitor for re-runs..."
+              echo "Some checks failed, giving up and requesting manual intervention"
+              gh issue comment ${ISSUE_NUMBER} --repo "${{ github.repository }}" --body "${{ github.event.inputs.message-if-failure }}"
+              exit 1
             fi
 
             if [ "${i}" -lt "${POLL_ITERATIONS}" ]; then
